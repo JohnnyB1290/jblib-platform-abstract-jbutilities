@@ -27,6 +27,9 @@ public:
 	void write(uint8_t byte);
 	void write(uint8_t* bytes, uint16_t count);
 	uint16_t count();
+	uint16_t R();
+	uint16_t W();
+
 
 private:
 	uint8_t* buf;

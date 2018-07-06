@@ -78,3 +78,12 @@ void SimpleFifo::write(uint8_t* bytes, uint16_t count) {
 uint16_t SimpleFifo::count() {
 	return (BW - BR);
 }
+
+uint16_t SimpleFifo::R() {
+	return BR;
+}
+
+uint16_t SimpleFifo::W() {
+	return BW;
+}
+
