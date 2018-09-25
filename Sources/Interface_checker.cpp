@@ -57,9 +57,9 @@ Interface_checker_t::~Interface_checker_t(void)
 
 void Interface_checker_t::Add_interface(void_channel_t* iface)
 {
+	if(this->Ifaces_count == Iface_checker_max_num_ifaces) this->Ifaces_count = 0;
 	this->Ifaces_ptrs_mass[this->Ifaces_count] = iface;
 	this->Ifaces_count++;
-	if(this->Ifaces_count == Iface_checker_max_num_ifaces) this->Ifaces_count = 0;
 }
 
 void Interface_checker_t::Initialize(void* (*mem_alloc)(size_t),uint16_t tx_buf_size, Channel_Call_Interface_t* call_interface_ptr)
