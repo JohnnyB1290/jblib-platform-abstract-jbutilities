@@ -41,7 +41,6 @@ DES.C: DES Algorithm Program from the Book Applied Cryptography, Bruce Schneier
  */
 
 
-#include <stdio.h>
 #include "DES.h"
 
 static void scrunch(unsigned char *, unsigned long *);
