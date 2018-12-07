@@ -62,8 +62,10 @@ uint16_t SimpleFifo::get(uint8_t* destination, uint16_t count) {
 }
 
 void SimpleFifo::write(uint8_t byte) {
-	buf[BW++] = byte;
-	this->BW = this->BW == this->size ? 0 : this->BW;
+	uint16_t tbw = BW;
+	buf[tbw++] = byte;
+	tbw = tbw == this->size ? 0 : tbw;
+	this->BW = tbw;
 }
 
 void SimpleFifo::write(uint8_t* bytes, uint16_t count) {
