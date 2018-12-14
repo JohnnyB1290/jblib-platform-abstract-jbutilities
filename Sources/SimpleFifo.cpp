@@ -81,6 +81,10 @@ uint16_t SimpleFifo::count() {
 	return (BW - BR);
 }
 
+uint16_t SimpleFifo::capacity() {
+	return this->size;
+}
+
 uint16_t SimpleFifo::R() {
 	return BR;
 }
