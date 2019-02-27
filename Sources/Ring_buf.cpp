@@ -10,7 +10,12 @@
 
 ring_buf_t::ring_buf_t(void* buffer, int itemSize, int count):Channel_Call_Interface_t()
 {
+	this->buffer = buffer;
 	RingBuffer_Init(&(this->RingBuff), buffer, itemSize, count);
+}
+
+void* ring_buf_t::getBuffer(void){
+	return this->buffer;
 }
 
 void ring_buf_t::Flush(void)

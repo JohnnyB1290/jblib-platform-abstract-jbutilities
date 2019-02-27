@@ -30,8 +30,10 @@ public:
 	int FindMult(void* data, int num, uint32_t start_index);
 	int DelMult(int num);
 	virtual void channel_callback(uint8_t *mes,uint16_t m_size,void* channel_pointer, void* parameters);
+	void* getBuffer(void);
 private:
 	RINGBUFF_T RingBuff;
+	void* buffer;
 };
 
 
