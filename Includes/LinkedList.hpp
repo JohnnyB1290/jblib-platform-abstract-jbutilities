@@ -36,6 +36,10 @@ public:
 		this->iteratorPtr = new LinkIterator_t(this);
 	}
 
+	~LinkedList_t(void){
+		delete this->iteratorPtr;
+	}
+
 	void insertFirst(T* newDataPtr){
 	    Node_t* newNode = new Node_t(newDataPtr);
 	    newNode->nextPtr = this->firstPtr;
