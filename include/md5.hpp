@@ -9,8 +9,8 @@
 #define MD5_HPP_
 
 // Bah, signed variables are for wimps 
-#define uchar unsigned char 
-#define uint unsigned int 
+typedef unsigned char uchar;
+typedef unsigned int uint;
 
 class MD5_CTX_t
 {
