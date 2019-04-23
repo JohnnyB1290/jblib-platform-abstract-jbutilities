@@ -40,6 +40,9 @@ DES.C: DES Algorithm Program from the Book Applied Cryptography, Bruce Schneier
  * Modified 6/4/12 by JH  --- Adding CBC funcitonality
  */
 
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "DES.h"
 

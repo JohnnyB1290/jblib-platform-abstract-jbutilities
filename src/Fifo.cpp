@@ -4,6 +4,9 @@
  * Created: 03.11.2017 16:49:26
  *  Author: Pawlow_nic, Stalker1290
  */ 
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "Fifo.hpp"
 #include "string.h"

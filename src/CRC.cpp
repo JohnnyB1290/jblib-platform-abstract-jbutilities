@@ -4,6 +4,9 @@
  * Created: 02.11.2017 11:57:10
  *  Author: Pawlow_nic, Stalker1290
  */ 
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "CRC.hpp"
 

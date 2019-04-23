@@ -4,11 +4,16 @@
  * Created: 04.04.2018 13:55:57
  *  Author: kgn
  */ 
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include "SimpleFifo.hpp"
 #include "stdlib.h"
 
 SimpleFifo::SimpleFifo(uint16_t size) {
+	this->BW_tmp = 0;
+	this->BR_tmp = 0;
 	this->buf = (uint8_t*)malloc(size);
 	this->size = size;
 	this->reset();
