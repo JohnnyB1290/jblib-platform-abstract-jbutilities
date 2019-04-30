@@ -44,7 +44,7 @@ DES.C: DES Algorithm Program from the Book Applied Cryptography, Bruce Schneier
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-#include "DES.h"
+#include "des.h"
 
 static void scrunch(unsigned char *, unsigned long *);
 static void unscrun(unsigned long *, unsigned char *);

@@ -1,32 +1,54 @@
-/*
- * md5.hpp
+/**
+ * @file
+ * @brief MD5 Algorithm class description
  *
- *  Created on: 07.11.2017
- *      Author: Stalker1290
+ *
+ * @note
+ * Copyright © 2019 Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * All rights reserved.
+ * Author: Brad Conte. Contacts: <brad@bradconte.com>
+ * Author: Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
  */
 
 #ifndef MD5_HPP_
 #define MD5_HPP_
 
-// Bah, signed variables are for wimps 
-typedef unsigned char uchar;
-typedef unsigned int uint;
+#include <stdint.h>
 
-class MD5_CTX_t
+namespace jblib::jbutilities
+{
+
+class Md5
 {
 public:
-	MD5_CTX_t(void);
-	void Reset(void);
-	void Update(uchar data[], uint len);
-	void Final(uchar hash[]);
+	Md5(void);
+	void reset(void);
+	void update(uint8_t* data, uint32_t len);
+	void final(uint8_t* hash);
+
 private:
-	void Transform(uchar data[]);
-	uchar data[64];
-	uint datalen;
-	uint bitlen[2];
-	uint state[4];
+	void transform(uint8_t* data);
+	uint8_t data_[64];
+	uint32_t datalen_ = 0;
+	uint32_t bitlen_[2];
+	uint32_t state_[4];
 };
 
-
+}
 
 #endif /* MD5_HPP_ */

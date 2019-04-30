@@ -1,22 +1,48 @@
-// Code by: B-Con (http://b-con.us) 
-// Released under the GNU GPL 
-// MD5 Hash Digest implementation (little endian byte order) 
+/**
+ * @file
+ * @brief MD5 Algorithm class realization
+ *
+ *
+ * @note
+ * Copyright © 2019 Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * All rights reserved.
+ * Author: Brad Conte. Contacts: <brad@bradconte.com>
+ * Author: Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
+ */
 
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include "md5.hpp"
 #include "string.h"
 
+namespace jblib::jbutilities
+{
 
 // DBL_INT_ADD treats two unsigned ints a and b as one 64-bit integer and adds c to it
 #define DBL_INT_ADD(a,b,c) if (a > 0xffffffff - c) ++b; a += c; 
-#define ROTLEFT(a,b) ((a << b) | (a >> (32-b))) 
+#define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
 
-#define F(x,y,z) ((x & y) | (~x & z)) 
-#define G(x,y,z) ((x & z) | (y & ~z)) 
-#define H(x,y,z) (x ^ y ^ z) 
-#define I(x,y,z) (y ^ (x | ~z)) 
+#define F(x,y,z) (((x) & (y)) | (~(x) & (z)))
+#define G(x,y,z) (((x) & (z)) | ((y) & ~(z)))
+#define H(x,y,z) ((x) ^ (y) ^ (z))
+#define I(x,y,z) ((y) ^ ((x) | ~(z)))
 
 #define FF(a,b,c,d,m,s,t) { a += F(b,c,d) + m + t; \
                             a = b + ROTLEFT(a,s); }
@@ -27,10 +53,9 @@
 #define II(a,b,c,d,m,s,t) { a += I(b,c,d) + m + t; \
                             a = b + ROTLEFT(a,s); } 
 
-
-void MD5_CTX_t::Transform(uchar data[])
+void Md5::transform(uint8_t* data)
 {  
-   uint a,b,c,d,m[16],i,j; 
+   uint32_t a,b,c,d,m[16],i,j;
    
    // MD5 specifies big endian byte order, but this implementation assumes a little 
    // endian byte order CPU. Reverse all the bytes upon input, and re-reverse them 
@@ -38,10 +63,10 @@ void MD5_CTX_t::Transform(uchar data[])
    for (i=0,j=0; i < 16; ++i, j += 4) 
       m[i] = (data[j]) + (data[j+1] << 8) + (data[j+2] << 16) + (data[j+3] << 24); 
    
-   a = this->state[0];
-   b = this->state[1];
-   c = this->state[2];
-   d = this->state[3];
+   a = this->state_[0];
+   b = this->state_[1];
+   c = this->state_[2];
+   d = this->state_[3];
    
    FF(a,b,c,d,m[0],  7,0xd76aa478); 
    FF(d,a,b,c,m[1], 12,0xe8c7b756); 
@@ -111,82 +136,84 @@ void MD5_CTX_t::Transform(uchar data[])
    II(c,d,a,b,m[2], 15,0x2ad7d2bb); 
    II(b,c,d,a,m[9], 21,0xeb86d391); 
    
-   this->state[0] += a;
-   this->state[1] += b;
-   this->state[2] += c;
-   this->state[3] += d;
+   this->state_[0] += a;
+   this->state_[1] += b;
+   this->state_[2] += c;
+   this->state_[3] += d;
 }  
 
-MD5_CTX_t::MD5_CTX_t(void)
+Md5::Md5(void)
 {  
-	this->Reset();
+	this->reset();
 }  
 
-void MD5_CTX_t::Reset(void)
+void Md5::reset(void)
 {
-	memset(this->data,0,64);
-	this->datalen = 0;
-	this->bitlen[0] = 0;
-	this->bitlen[1] = 0;
-	this->state[0] = 0x67452301;
-	this->state[1] = 0xEFCDAB89;
-	this->state[2] = 0x98BADCFE;
-	this->state[3] = 0x10325476;
+	memset(this->data_,0,64);
+	this->datalen_ = 0;
+	this->bitlen_[0] = 0;
+	this->bitlen_[1] = 0;
+	this->state_[0] = 0x67452301;
+	this->state_[1] = 0xEFCDAB89;
+	this->state_[2] = 0x98BADCFE;
+	this->state_[3] = 0x10325476;
 }
 
-void MD5_CTX_t::Update(uchar data[], uint len)
+void Md5::update(uint8_t* data, uint32_t len)
 {  
-   uint i;
+   uint32_t i;
    
    for (i=0; i < len; ++i) { 
-      this->data[this->datalen] = data[i];
-      this->datalen++;
-      if (this->datalen == 64) {
-    	 this->Transform(this->data);
-         DBL_INT_ADD(this->bitlen[0],this->bitlen[1],512);
-         this->datalen = 0;
+      this->data_[this->datalen_] = data[i];
+      this->datalen_++;
+      if (this->datalen_ == 64) {
+    	 this->transform(this->data_);
+         DBL_INT_ADD(this->bitlen_[0],this->bitlen_[1],512);
+         this->datalen_ = 0;
       }  
    }  
 }  
 
-void MD5_CTX_t::Final(uchar hash[])
+void Md5::final(uint8_t* hash)
 {  
-   uint i;
+   uint32_t i;
    
-   i = this->datalen;
+   i = this->datalen_;
    
    // Pad whatever data is left in the buffer. 
-   if (this->datalen < 56) {
-      this->data[i++] = 0x80;
+   if (this->datalen_ < 56) {
+      this->data_[i++] = 0x80;
       while (i < 56) 
-         this->data[i++] = 0x00;
+         this->data_[i++] = 0x00;
    }  
-   else if (this->datalen >= 56) {
-      this->data[i++] = 0x80;
+   else if (this->datalen_ >= 56) {
+      this->data_[i++] = 0x80;
       while (i < 64) 
-         this->data[i++] = 0x00;
-      this->Transform(this->data);
-      memset(this->data,0,56);
+         this->data_[i++] = 0x00;
+      this->transform(this->data_);
+      memset(this->data_,0,56);
    }  
    
    // Append to the padding the total message's length in bits and transform. 
-   DBL_INT_ADD(this->bitlen[0],this->bitlen[1],8 * this->datalen);
-   this->data[56] = this->bitlen[0];
-   this->data[57] = this->bitlen[0] >> 8;
-   this->data[58] = this->bitlen[0] >> 16;
-   this->data[59] = this->bitlen[0] >> 24;
-   this->data[60] = this->bitlen[1];
-   this->data[61] = this->bitlen[1] >> 8;
-   this->data[62] = this->bitlen[1] >> 16;
-   this->data[63] = this->bitlen[1] >> 24;
-   this->Transform(this->data);
+   DBL_INT_ADD(this->bitlen_[0],this->bitlen_[1],8 * this->datalen_);
+   this->data_[56] = this->bitlen_[0];
+   this->data_[57] = this->bitlen_[0] >> 8;
+   this->data_[58] = this->bitlen_[0] >> 16;
+   this->data_[59] = this->bitlen_[0] >> 24;
+   this->data_[60] = this->bitlen_[1];
+   this->data_[61] = this->bitlen_[1] >> 8;
+   this->data_[62] = this->bitlen_[1] >> 16;
+   this->data_[63] = this->bitlen_[1] >> 24;
+   this->transform(this->data_);
    
    // Since this implementation uses little endian byte ordering and MD uses big endian, 
    // reverse all the bytes when copying the final state to the output hash. 
    for (i=0; i < 4; ++i) { 
-      hash[i]    = (this->state[0] >> (i*8)) & 0x000000ff;
-      hash[i+4]  = (this->state[1] >> (i*8)) & 0x000000ff;
-      hash[i+8]  = (this->state[2] >> (i*8)) & 0x000000ff;
-      hash[i+12] = (this->state[3] >> (i*8)) & 0x000000ff;
+      hash[i]    = (this->state_[0] >> (i*8)) & 0x000000ff;
+      hash[i+4]  = (this->state_[1] >> (i*8)) & 0x000000ff;
+      hash[i+8]  = (this->state_[2] >> (i*8)) & 0x000000ff;
+      hash[i+12] = (this->state_[3] >> (i*8)) & 0x000000ff;
    }  
 }   
+
+}

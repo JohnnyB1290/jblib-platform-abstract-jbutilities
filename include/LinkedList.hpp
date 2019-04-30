@@ -1,264 +1,347 @@
-/*
- * LinkedList.hpp
+/**
+ * @file
+ * @brief Linked List realization
  *
- *  Created on: 19 мар. 2019 г.
- *      Author: Stalker1290
+ *
+ * @note
+ * Copyright В© 2019 Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * All rights reserved.
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
  */
 
 #ifndef LINKEDLIST_HPP_
 #define LINKEDLIST_HPP_
 
-#include "chip.h"
+namespace jblib::jbutilities
+{
 
 template <class T>
-class LinkedList_t{
+class LinkedList
+{
 private:
-	class Node_t{
-	public:
-		Node_t(T* dataPtr){
-			this->nextPtr = NULL;
-			this->previousPtr = NULL;
-			this->dataPtr = dataPtr;
-		}
-		Node_t* nextPtr;
-		Node_t* previousPtr;
-		T* dataPtr;
-	};
-	Node_t* firstPtr;
-	Node_t* lastPtr;
-	uint32_t size;
+	class Node;
+
 public:
+	class LinkIterator;
 
-	LinkedList_t(void){
-		this->firstPtr = NULL;
-		this->lastPtr = NULL;
-		this->size = 0;
-		this->iteratorPtr = new LinkIterator_t(this);
+	void insertFirst(T* newData)
+	{
+	    Node* newNode = new Node(newData);
+	    newNode->next_ = this->first_;
+	    if(!this->isEmpty())
+	    	this->first_->previous_ = newNode;
+	    else
+	    	this->last_ = newNode;
+	    this->first_ = newNode;
+	    this->size_++;
 	}
 
-	~LinkedList_t(void){
-		delete this->iteratorPtr;
-	}
 
-	void insertFirst(T* newDataPtr){
-	    Node_t* newNode = new Node_t(newDataPtr);
-	    newNode->nextPtr = this->firstPtr;
-	    if(!this->isEmpty()) this->firstPtr->previousPtr = newNode;
-	    else this->lastPtr = newNode;
-	    this->firstPtr = newNode;
-	    this->size++;
-	}
 
-	T* deleteFirst(void){
-	    if(this->isEmpty()) return NULL;
+	T* deleteFirst(void)
+	{
+	    if(this->isEmpty())
+	    	return NULL;
 	    else {
-	    	T* oldFirstDataPtr = this->firstPtr->dataPtr;
-	    	Node_t* oldFirstPtr = this->firstPtr;
-	        this->firstPtr = this->firstPtr->nextPtr;
-	        if(this->firstPtr != NULL)
-	        	this->firstPtr->previousPtr = NULL;
-	        this->size--;
-	        if(this->isEmpty()) this->lastPtr = NULL;
-	        delete oldFirstPtr;
-	        return oldFirstDataPtr;
+	    	T* oldFirstData = this->first_->data_;
+	    	Node* oldFirst = this->first_;
+	        this->first_ = this->first_->next_;
+	        if(this->first_)
+	        	this->first_->previous_ = NULL;
+	        this->size_--;
+	        if(this->isEmpty())
+	        	this->last_ = NULL;
+	        delete oldFirst;
+	        return oldFirstData;
 	    }
 	}
 
-	T* getFirst(void){
-		return this->firstPtr->dataPtr;
+
+
+	T* getFirst(void)
+	{
+		return this->first_->data_;
 	}
 
-	void insertLast(T* newDataPtr){
-	    Node_t* newNode = new Node_t(newDataPtr);
-	    if(this->isEmpty()) this->firstPtr = newNode;
+
+
+	void insertLast(T* newData)
+	{
+	    Node* newNode = new Node(newData);
+	    if(this->isEmpty())
+	    	this->first_ = newNode;
 	    else {
-	        newNode->previousPtr = this->lastPtr;
-	        this->lastPtr->nextPtr = newNode;
+	        newNode->previous_ = this->last_;
+	        this->last_->next_ = newNode;
 	    }
-	    this->lastPtr = newNode;
-	    this->size++;
+	    this->last_ = newNode;
+	    this->size_++;
 	}
 
-	T* deleteLast(void){
+
+
+	T* deleteLast(void)
+	{
 	    if(this->isEmpty()) return NULL;
-	    T* oldLastDataPtr = this->lastPtr->dataPtr;
-	    Node_t* oldLastPtr = this->lastPtr;
-	    if(this->lastPtr->previousPtr != NULL)
-	    	this->lastPtr->previousPtr->nextPtr = NULL;
-	    this->lastPtr = this->lastPtr->previousPtr;
-	    this->size--;
-	    if(this->lastPtr == NULL) this->firstPtr = NULL;
+	    T* oldLastDataPtr = this->last_->data_;
+	    Node* oldLastPtr = this->last_;
+	    if(this->last_->previous_ != NULL)
+	    	this->last_->previous_->next_ = NULL;
+	    this->last_ = this->last_->previous_;
+	    this->size_--;
+	    if(this->last_ == NULL) this->first_ = NULL;
 	    delete oldLastPtr;
 	    return oldLastDataPtr;
 	}
 
-	int findIndex(T* dataPtr){
+
+
+	int findIndex(T* data)
+	{
 		int index = -1;
-	    Node_t* currentPtr = this->firstPtr;
-	    while((currentPtr != NULL) && (currentPtr->dataPtr != dataPtr)){
-	    	currentPtr = currentPtr->nextPtr;
+	    Node* current = this->first_;
+	    while((current != NULL) && (current->data_ != data)){
+	    	current = current->next_;
 	    	index++;
 	    }
 	    return index;
 	}
 
-	void insert(uint32_t index, T* dataPtr){
-	    if(index > this->size) return;
+
+
+	void insert(uint32_t index, T* data)
+	{
+	    if(index > this->size_)
+	    	return;
 	    if(index == 0){
-	        this->insertFirst(dataPtr);
+	        this->insertFirst(data);
 	        return;
 	    }
-	    else if(index == this->size){
-	        this->insertLast(dataPtr);
+	    else if(index == this->size_) {
+	        this->insertLast(data);
 	        return;
 	    }
 
 	    uint32_t indexCurrent = 0;
-	    Node_t* currentPtr = this->firstPtr;
-	    Node_t* newNodePtr = new Node_t(dataPtr);
+	    Node* current = this->first_;
+	    Node* newNode = new Node(data);
 
 	    while (indexCurrent < index){
 	        indexCurrent++;
-	        currentPtr = currentPtr->nextPtr;
+	        current = current->next_;
 	    }
 
-	    newNodePtr->previousPtr = currentPtr->previousPtr;
-	    currentPtr->previousPtr->nextPtr = newNodePtr;
-	    currentPtr->previousPtr = newNodePtr;
-	    newNodePtr->nextPtr = currentPtr;
-	    this->size++;
+	    newNode->previous_ = current->previous_;
+	    current->previous_->next_ = newNode;
+	    current->previous_ = newNode;
+	    newNode->next_ = current;
+	    this->size_++;
 	}
 
-	T* deleteNode(T* dataPtr){
-		Node_t* currentPtr = this->firstPtr;
-	    while((currentPtr != NULL) && (currentPtr->dataPtr != dataPtr)){
-	    	currentPtr = currentPtr->nextPtr;
+
+
+	T* deleteNode(T* data)
+	{
+		Node* current = this->first_;
+	    while((current != NULL) && (current->data_ != data)) {
+	    	current = current->next_;
 	    }
 
-		if(currentPtr == NULL) return NULL;
-		else if(currentPtr->previousPtr == NULL) return this->deleteFirst();
-		else if(currentPtr->nextPtr == NULL) return this->deleteLast();
+		if(current == NULL)
+			return NULL;
+		else if(current->previous_ == NULL)
+			return this->deleteFirst();
+		else if(current->next_ == NULL)
+			return this->deleteLast();
 
-		currentPtr->previousPtr->nextPtr = currentPtr->nextPtr;
-		currentPtr->nextPtr->previousPtr = currentPtr->previousPtr;
-		this->size--;
-		T* currentDataPtr = currentPtr->dataPtr;
-		delete currentPtr;
-		return currentDataPtr;
+		current->previous_->next_ = current->next_;
+		current->next_->previous_ = current->previous_;
+		this->size_--;
+		T* currentData = current->data_;
+		delete current;
+		return currentData;
 	}
 
-	uint32_t getSize(void){
-		return this->size;
+
+
+	uint32_t getSize(void)
+	{
+		return this->size_;
 	}
 
-	bool isEmpty(void){
-		return (this->firstPtr == NULL);
+
+
+	bool isEmpty(void)
+	{
+		return (this->first_ == NULL);
 	}
 
-	class LinkIterator_t{
+	LinkIterator* getIteratorPtr(void){
+		return &this->iterator;
+	}
+
+	class LinkIterator
+	{
 	public:
-		LinkIterator_t(LinkedList_t<T>* linkedListPtr){
-			this->linkedListPtr = linkedListPtr;
-			this->currentPtr = this->linkedListPtr->firstPtr;
+		LinkIterator(LinkedList<T>* linkedList)
+		{
+			this->linkedList_ = linkedList;
+			this->current_ = this->linkedList_->first_;
 		}
 
-		void reset(void){
-			this->currentPtr = this->linkedListPtr->firstPtr;
+
+
+		void reset(void)
+		{
+			this->current_ = this->linkedList_->first_;
 		}
 
-		bool atEnd(void){
-			return (this->linkedListPtr->isEmpty()) ||
-					(this->currentPtr->nextPtr == NULL);
+
+
+		bool atEnd(void)
+		{
+			return (this->linkedList_->isEmpty()) ||
+					(this->current_->next_ == NULL);
 		}
 
-		bool atStart(void){
-			return (this->linkedListPtr->isEmpty()) ||
-					(this->currentPtr->previousPtr == NULL);
+
+
+		bool atStart(void)
+		{
+			return (this->linkedList_->isEmpty()) ||
+					(this->current_->previous_ == NULL);
 		}
 
-		void nextLink(void){
-			 if((!this->linkedListPtr->isEmpty()) && this->currentPtr->nextPtr != NULL)
-				 this->currentPtr = this->currentPtr->nextPtr;
+
+
+		void nextLink(void)
+		{
+			 if((!this->linkedList_->isEmpty()) && this->current_->next_ != NULL)
+				 this->current_ = this->current_->next_;
 		}
 
-		void previousLink(void){
-			 if((!this->linkedListPtr->isEmpty()) && this->currentPtr->previousPtr != NULL)
-				 this->currentPtr = this->currentPtr->previousPtr;
+
+
+		void previousLink(void)
+		{
+			 if((!this->linkedList_->isEmpty()) && this->current_->previous_ != NULL)
+				 this->current_ = this->current_->previous_;
 		}
 
-		T* getCurrent(void){
-			return (this->currentPtr == NULL)? NULL : this->currentPtr->dataPtr;
+
+
+		T* getCurrent(void)
+		{
+			return (this->current_ == NULL)? NULL : this->current_->data_;
 		}
 
-		void insertAfter(T* dataPtr){
-		    if (this->linkedListPtr->isEmpty()){
-		    	this->linkedListPtr->insertFirst(dataPtr);
-		        this->currentPtr = this->linkedListPtr->firstPtr;
+
+
+		void insertAfter(T* data)
+		{
+		    if (this->linkedList_->isEmpty()) {
+		    	this->linkedList_->insertFirst(data);
+		        this->current_ = this->linkedList_->first_;
 		    }
-		    else if(this->atEnd()){
-		        this->linkedListPtr->insertLast(dataPtr);
-		        this->currentPtr = this->linkedListPtr->lastPtr;
-		    } else{
-		    	Node_t* newNodePtr = new Node_t(dataPtr);
-		    	newNodePtr->previousPtr = this->currentPtr;
-		    	newNodePtr->nextPtr = this->currentPtr->nextPtr;
-		        this->currentPtr->nextPtr->previousPtr = newNodePtr;
-		        this->currentPtr->nextPtr = newNodePtr;
-		        this->nextLink();
-		        this->linkedListPtr->size++;
-		    }
-		}
-
-		void insertBefore(T* dataPtr){
-		    if (this->atStart()){
-		        this->linkedListPtr->insertFirst(dataPtr);
-		        this->currentPtr = this->linkedListPtr->firstPtr;
+		    else if(this->atEnd()) {
+		        this->linkedList_->insertLast(data);
+		        this->current_ = this->linkedList_->last_;
 		    }
 		    else{
-		        Node_t* newNodePtr = new Node_t(dataPtr);
-		        newNodePtr->previousPtr = this->currentPtr->previousPtr;
-		        this->currentPtr->previousPtr->nextPtr = newNodePtr;
-		        this->currentPtr->previousPtr = newNodePtr;
-		        newNodePtr->nextPtr = this->currentPtr;
-		        this->previousLink();
-		        this->linkedListPtr->size++;
+		    	Node* newNode = new Node(data);
+		    	newNode->previous_ = this->current_;
+		    	newNode->next_ = this->current_->next_;
+		        this->current_->next_->previous_ = newNode;
+		        this->current_->next_ = newNode;
+		        this->nextLink();
+		        this->linkedList_->size_++;
 		    }
 		}
 
-		T* deleteCurrent(void){
-		    T* oldDataPtr = NULL;
+
+
+		void insertBefore(T* data)
+		{
+		    if (this->atStart()) {
+		        this->linkedList_->insertFirst(data);
+		        this->current_ = this->linkedList_->first_;
+		    }
+		    else {
+		        Node* newNode = new Node(data);
+		        newNode->previous_ = this->current_->previous_;
+		        this->current_->previous_->next_ = newNode;
+		        this->current_->previous_ = newNode;
+		        newNode->next_ = this->current_;
+		        this->previousLink();
+		        this->linkedList_->size_++;
+		    }
+		}
+
+
+
+		T* deleteCurrent(void)
+		{
+		    T* oldData = NULL;
 
 		    if(this->atStart()) {
-		        oldDataPtr = this->linkedListPtr->deleteFirst();
-		        this->currentPtr = this->linkedListPtr->firstPtr;
+		        oldData = this->linkedList_->deleteFirst();
+		        this->current_ = this->linkedList_->first_;
 		    }
-		    else if(this->atEnd()){
-		        oldDataPtr = this->linkedListPtr->deleteLast();
-		        this->currentPtr = this->linkedListPtr->lastPtr;
+		    else if(this->atEnd()) {
+		        oldData = this->linkedList_->deleteLast();
+		        this->current_ = this->linkedList_->last_;
 		    }
-		    else{
-		        oldDataPtr = this->currentPtr->dataPtr;
-		        this->currentPtr->nextPtr->previousPtr = this->currentPtr->previousPtr;
-		        this->currentPtr->previousPtr->nextPtr = this->currentPtr->nextPtr;
-		        Node_t* tempNodePtr = this->currentPtr;
-		        this->currentPtr = this->currentPtr->nextPtr;
-		        delete tempNodePtr;
-		        this->linkedListPtr->size--;
+		    else {
+		        oldData = this->current_->data_;
+		        this->current_->next_->previous_ = this->current_->previous_;
+		        this->current_->previous_->next_ = this->current_->next_;
+		        Node* tempNode = this->current_;
+		        this->current_ = this->current_->next_;
+		        delete tempNode;
+		        this->linkedList_->size_--;
 		    }
-		    return oldDataPtr;
+		    return oldData;
 		}
 
 	private:
-		Node_t* currentPtr;
-		LinkedList_t<T>* linkedListPtr;
+		Node* current_ = NULL;
+		LinkedList<T>* linkedList_ = NULL;
 	};
 
-	LinkIterator_t* getIteratorPtr(void){
-		return this->iteratorPtr;
-	}
-
 private:
-	LinkIterator_t* iteratorPtr;
+
+	class Node
+	{
+	public:
+		Node(T* data)
+		{
+			this->data_ = data;
+		}
+		Node* next_ = NULL;
+		Node* previous_ = NULL;
+		T* data_ = NULL;
+	};
+
+	Node* first_ = NULL;
+	Node* last_ = NULL;
+	uint32_t size_ = 0;
+	LinkIterator iterator =  LinkIterator(this);
 };
+
+}
 
 #endif /* LINKEDLIST_HPP_ */

@@ -1,16 +1,40 @@
-/*
- * CRC.cpp
+/**
+ * @file
+ * @brief CRC Calculation class realization
  *
- * Created: 02.11.2017 11:57:10
- *  Author: Pawlow_nic, Stalker1290
- */ 
+ * Event Timer for cycling/one time events.
+ *
+ * @note
+ * Copyright © 2019 Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * All rights reserved.
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
+ */
+
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-#include "CRC.hpp"
+#include "Crc.hpp"
 
-const uint8_t CRC_t::crc8Table[] = {
+namespace jblib::jbutilities
+{
+
+
+const uint8_t Crc::crc8Table_[] = {
 	0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97,
 	0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E,
 	0x43, 0x72, 0x21, 0x10, 0x87, 0xB6, 0xE5, 0xD4,
@@ -45,53 +69,40 @@ const uint8_t CRC_t::crc8Table[] = {
 	0x3B, 0x0A, 0x59, 0x68, 0xFF, 0xCE, 0x9D, 0xAC
 };
 
-uint16_t CRC_t::crc16_xmodem_update(uint16_t crc, uint8_t data)
+uint8_t Crc::crc8(uint8_t crc, uint8_t* data, uint16_t size)
 {
-	int i;
-
-	crc = crc ^ ((uint16_t)data << 8);
-	for (i=0; i<8; i++)
-	{
-		if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
-		else crc <<= 1;
-	}
+	while(size-- > 0)
+		crc = Crc::crc8Table_[crc ^ *data++];
 	return crc;
 }
 
-uint16_t CRC_t::Crc16(uint8_t* pcBlock, uint32_t len)
+
+
+uint8_t Crc::crc8(uint8_t* data, uint16_t size)
 {
-	return CRC_t::Crc16(pcBlock, len, 0xFFFF);
+	return Crc::crc8(0xFF, data, size);
 }
 
-uint16_t CRC_t::Crc16(uint8_t* pcBlock, uint32_t len, uint16_t startFill)
+
+
+uint16_t Crc::crc16(uint16_t crc, uint8_t* data, uint16_t size)
 {
-	uint16_t crc = startFill;
-
-	while(len--)
-	{
-		crc = CRC_t::crc16_xmodem_update(crc,*pcBlock++);
-	}
-	return crc;
-}
-
-uint16_t CRC_t::crc16(uint16_t crc, uint8_t* dataPointer, uint16_t count) {
-	while(count-- > 0) {
-		crc = crc ^ ((uint16_t) (*dataPointer++) << 8);
-		for (int i = 0; i < 8; i++) {
+	while(size-- > 0) {
+		crc = crc ^ ((uint16_t) (*data++) << 8);
+		for (uint8_t i = 0; i < 8; i++) {
 			if (crc & 0x8000)
-			crc = (crc << 1) ^ 0x1021;
+				crc = (crc << 1) ^ 0x1021;
 			else
-			crc <<= 1;
+				crc <<= 1;
 		}
 	}
 	return crc;
 }
 
-uint8_t CRC_t::crc8(uint8_t crc, uint8_t* dataPointer, uint16_t count) {
-	while(count-- > 0) {
-		crc = crc8Table[crc ^ *dataPointer++];
-	}
-	return crc;
+
+uint16_t Crc::crc16(uint8_t* data, uint16_t size)
+{
+	return Crc::crc16(0xFFFF, data, size);
 }
 
-
+}

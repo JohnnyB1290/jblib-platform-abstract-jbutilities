@@ -1,15 +1,37 @@
-/*
- * SimpleFifo.cpp
+/**
+ * @file
+ * @brief Simple Fifo class realization
  *
- * Created: 04.04.2018 13:55:57
- *  Author: kgn
- */ 
+ *
+ * @note
+ * Copyright © 2019 Gleb Koba. Contacts: <koban4ik_11@mail.ru>
+ * All rights reserved.
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
+ */
+
 // This is an open source non-commercial project. Dear PVS-Studio, please check it.
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+#include <stdlib.h>
 #include "SimpleFifo.hpp"
-#include "stdlib.h"
+
+namespace jblib::jbutilities
+{
 
 SimpleFifo::SimpleFifo(uint16_t size) {
 	this->BW_tmp = 0;
@@ -148,3 +170,4 @@ uint16_t SimpleFifo::W() {
 	return BW;
 }
 
+}

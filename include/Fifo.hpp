@@ -1,38 +1,62 @@
-/*
- * Fifo.hpp
+/**
+ * @file
+ * @brief Fifo class description
  *
- * Created: 03.11.2017 16:49:57
- *  Author: Pawlow_nic, Stalker1290
- */ 
+ *
+ * @note
+ * Copyright © 2019 Evgeniy Ivanov. Contacts: <strelok1290@gmail.com>
+ * Copyright © 2019 Nikolai Pavlov. Contacts: <pawlow_nic@mail.ru>
+ * All rights reserved.
+ * @note
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * @note
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @note
+ * This file is a part of JB_Lib.
+ */
 
 
 #ifndef FIFO_HPP_
 #define FIFO_HPP_
 
-#include "chip.h"
-#include "Common_interfaces.hpp"
+#include <stdint.h>
 
-class Fifo_t
+namespace jblib::jbutilities
+{
+
+class Fifo
 {
 public:
-	Fifo_t(uint8_t* buf,uint16_t bufsize);
-	bool Fifo_IsFull(void);
-	bool Fifo_IsFree(void);
-	bool Fifo_NPop(uint8_t *pdest, uint16_t Num);
-	bool Fifo_Pop(uint8_t *pvalue);
-	bool Fifo_NPush(const uint8_t* psourse, uint16_t Num);
-	bool Fifo_Push(uint8_t value);
-	uint16_t Fifo_GetLevel(void);
-	uint16_t Fifo_GetFree(void);
-	bool Fifo_Find(uint8_t *pvalue, uint16_t index);
-	bool Fifo_NFind(uint8_t *pdest, uint16_t Num, uint16_t start_index);
-	bool Fifo_NDel(uint16_t Num);
+	Fifo(uint8_t* buffer, uint16_t bufferSize);
+	bool isFull(void) const;
+	bool isFree(void) const;
+	bool popMult(uint8_t* const destination, uint16_t size);
+	bool pop(uint8_t* const destination);
+	bool pushMult(const uint8_t* sourse, uint16_t size);
+	bool push(uint8_t value);
+	uint16_t getLevel(void) const;
+	uint16_t getFree(void) const;
+	bool find(uint8_t* const destination, uint16_t index);
+	bool findMult(uint8_t* const destination, uint16_t size, uint16_t startIndex);
+	bool deleteMult(uint16_t size);
+
 private:
-	uint8_t* buf;
-	uint16_t bufsize;
-	uint16_t Free;
-	uint16_t RP;
-	uint16_t WP;
+	uint8_t* buffer_ = NULL;
+	uint16_t bufferSize_ = 0;
+	uint16_t free_ = 0;
+	uint16_t rp_ = 0;
+	uint16_t wp_ = 0;
 };
+
+}
 
 #endif /* FIFO_HPP_ */
