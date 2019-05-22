@@ -41,9 +41,10 @@ namespace jblib::jbutilities
 
 RingBuffer::RingBuffer(void* const buffer, const uint32_t itemSize, const uint32_t size)
 {
-	if(buffer == NULL)
+	if(buffer)
+		this->buffer_ = buffer;
+	else
 		this->buffer_ = malloc_s(itemSize * size);
-	else this->buffer_ = buffer;
 	this->size_ = size;
 	this->itemSize_ = itemSize;
 }
