@@ -30,8 +30,11 @@
 
 #include <stdint.h>
 
-namespace jblib::jbutilities
+namespace jblib
 {
+namespace jbutilities
+{
+
 
 class Fifo
 {
@@ -57,6 +60,7 @@ private:
 	uint16_t wp_ = 0;
 };
 
+}
 }
 
 #endif /* FIFO_HPP_ */

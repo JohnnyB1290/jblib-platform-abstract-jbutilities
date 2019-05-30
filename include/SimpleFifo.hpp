@@ -28,7 +28,9 @@
 
 #include <stdint.h>
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 class SimpleFifo
@@ -69,6 +71,7 @@ private:
 
 };
 
+}
 }
 
 #endif /* SIMPLEFIFO_HPP_ */

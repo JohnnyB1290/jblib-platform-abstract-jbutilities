@@ -26,7 +26,9 @@
 #ifndef LINKEDLIST_HPP_
 #define LINKEDLIST_HPP_
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 template <class T>
@@ -342,6 +344,7 @@ private:
 	LinkIterator iterator =  LinkIterator(this);
 };
 
+}
 }
 
 #endif /* LINKEDLIST_HPP_ */

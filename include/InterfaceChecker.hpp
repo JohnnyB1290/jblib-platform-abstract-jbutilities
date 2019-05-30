@@ -31,7 +31,9 @@
 #include "callback_interfaces.hpp"
 #include "IVoidChannel.hpp"
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 using namespace jbkernel;
@@ -67,6 +69,7 @@ private:
 	IChannelCallback* callback_ = NULL;
 };
 
+}
 }
 
 #endif /* INTERFACECHECKER_HPP_ */

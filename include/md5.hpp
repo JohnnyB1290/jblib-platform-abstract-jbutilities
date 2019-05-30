@@ -30,7 +30,9 @@
 
 #include <stdint.h>
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 class Md5
@@ -49,6 +51,7 @@ private:
 	uint32_t state_[4];
 };
 
+}
 }
 
 #endif /* MD5_HPP_ */

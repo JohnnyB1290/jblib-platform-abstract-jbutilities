@@ -29,7 +29,9 @@
 
 #include <stdint.h>
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 class Crc
@@ -44,6 +46,7 @@ private:
 	static const uint8_t crc8Table_[256];
 };
 
+}
 }
 
 #endif /* CRC_HPP_ */
