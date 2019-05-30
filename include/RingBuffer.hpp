@@ -28,13 +28,17 @@
 
 #include <stdint.h>
 
-namespace jblib::jbutilities
+namespace jblib
 {
+namespace jbutilities
+{
+
 
 class RingBuffer
 {
 public:
-	RingBuffer(void* const buffer, const uint32_t itemSize, const uint32_t size);
+	RingBuffer(void* const buffer, const uint32_t itemSize,
+			const uint32_t size);
 	void flush(void);
 	uint32_t getSize(void) const;
 	uint32_t getCount(void) const;
@@ -58,6 +62,7 @@ private:
 	uint32_t tail_ = 0;
 };
 
+}
 }
 
 #endif /* RINGBUFFER_HPP_ */
