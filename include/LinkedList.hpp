@@ -192,7 +192,7 @@ public:
 		return (this->first_ == NULL);
 	}
 
-	LinkIterator* getIteratorPtr(void){
+	LinkIterator* getIterator(void){
 		return &this->iterator;
 	}
 
