@@ -101,7 +101,7 @@ uint16_t Crc::crc16(uint16_t crc, uint8_t* data, uint16_t size)
 
 
 
-static uint16_t crc16(uint8_t* data, uint16_t size, uint16_t crc)
+uint16_t Crc::crc16(uint8_t* data, uint16_t size, uint16_t crc)
 {
 	return Crc::crc16(crc, data, size);
 }
