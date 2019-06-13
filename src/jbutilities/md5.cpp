@@ -29,7 +29,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-#include "md5.hpp"
+#include "jbutilities/md5.hpp"
 #include "string.h"
 
 namespace jblib::jbutilities

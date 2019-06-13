@@ -29,7 +29,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include <string.h>
-#include "jb_common.h"
+#include "jbkernel/jb_common.h"
 #include "Fifo.hpp"
 
 namespace jblib::jbutilities

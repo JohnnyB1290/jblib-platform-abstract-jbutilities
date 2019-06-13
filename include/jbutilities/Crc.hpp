@@ -41,6 +41,7 @@ public:
 	static uint8_t crc8(uint8_t crc, uint8_t* data, uint16_t size);
 	static uint16_t crc16(uint8_t* data, uint16_t size);
 	static uint16_t crc16(uint16_t crc, uint8_t* data, uint16_t size);
+	static uint16_t crc16(uint8_t* data, uint16_t size, uint16_t crc);
 
 private:
 	static const uint8_t crc8Table_[256];

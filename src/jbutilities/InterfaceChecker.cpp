@@ -29,7 +29,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "InterfaceChecker.hpp"
+#include "jbutilities/InterfaceChecker.hpp"
 
 namespace jblib::jbutilities
 {

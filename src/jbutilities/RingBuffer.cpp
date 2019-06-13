@@ -29,7 +29,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "jb_common.h"
+#include "jbkernel/jb_common.h"
 #include "RingBuffer.hpp"
 
 #define HEAD_INDEX                (this->head_ & (this->size_ - 1))
