@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "jbkernel/jb_common.h"
-#include "RingBuffer.hpp"
+#include "jbutilities/RingBuffer.hpp"
 
 #define HEAD_INDEX                (this->head_ & (this->size_ - 1))
 #define TAIL_INDEX                (this->tail_ & (this->size_ - 1))

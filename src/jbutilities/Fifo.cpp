@@ -30,7 +30,7 @@
 
 #include <string.h>
 #include "jbkernel/jb_common.h"
-#include "Fifo.hpp"
+#include "jbutilities/Fifo.hpp"
 
 namespace jblib::jbutilities
 {
