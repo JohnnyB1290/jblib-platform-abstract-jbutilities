@@ -107,6 +107,9 @@ uint16_t SimpleFifo::get(uint8_t* destination, uint16_t count) {
 }
 
 void SimpleFifo::gotoTmpWriteMode() {
+	if(this->tmpWriteMode) {
+		return;
+	}
 	this->BW_tmp = this->BW;
 	this->tmpWriteMode = true;
 }
