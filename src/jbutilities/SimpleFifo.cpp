@@ -161,6 +161,14 @@ uint16_t SimpleFifo::count() {
 	return BW >= BR ? (BW - BR) : (size - BR + BW);
 }
 
+uint16_t SimpleFifo::tmpWriteCount() {
+	if(this->tmpWriteMode) {
+		return BW_tmp >= BR ? (BW_tmp - BR) : (size - BR + BW_tmp);
+	} else {
+		return BW >= BR ? (BW - BR) : (size - BR + BW);
+	}
+}
+
 uint16_t SimpleFifo::capacity() {
 	return this->size;
 }
