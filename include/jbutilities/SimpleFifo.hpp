@@ -37,6 +37,7 @@ class SimpleFifo
 {
 public:
 	SimpleFifo(uint16_t size);
+	SimpleFifo(uint8_t* externalBufPointer, uint16_t size);
 	void reset();
 	uint8_t* getWritePointer();
 	uint8_t* getReadPointer();

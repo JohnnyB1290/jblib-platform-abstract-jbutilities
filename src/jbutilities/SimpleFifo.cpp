@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include "jbutilities/SimpleFifo.hpp"
+#include "Controller.hpp"
 
 namespace jblib::jbutilities
 {
@@ -37,6 +38,18 @@ SimpleFifo::SimpleFifo(uint16_t size) {
 	this->BW_tmp = 0;
 	this->BR_tmp = 0;
 	this->buf = (uint8_t*)malloc(size);
+	this->size = size;
+	this->reset();
+}
+
+SimpleFifo::SimpleFifo(uint8_t* externalBufPointer, uint16_t size) {
+	this->BW_tmp = 0;
+	this->BR_tmp = 0;
+	if(externalBufPointer) {
+		this->buf = externalBufPointer;
+	} else {
+		this->buf = (uint8_t*)malloc(size);
+	}
 	this->size = size;
 	this->reset();
 }
