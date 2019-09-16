@@ -27,6 +27,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+#include <string.h>
 #include <stdlib.h>
 #include "jbutilities/SimpleFifo.hpp"
 #include "Controller.hpp"
@@ -113,7 +114,7 @@ uint32_t SimpleFifo::get(uint8_t* destination, uint32_t count) {
 	if(count > this->count()) {
 		count = this->count();
 	}
-	for(int i = 0; i < count; i++) {
+	for(uint32_t i = 0; i < count; i++) {
 		*destination++ = nextByte();
 	}
 	return count;
