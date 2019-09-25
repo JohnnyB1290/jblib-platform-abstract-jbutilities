@@ -102,10 +102,21 @@ void InterfaceChecker::initialize(void* (* const mallocFunc)(size_t),
 void InterfaceChecker::deinitialize(void)
 {
 	if(this->isInitialized_){
-		for(uint32_t i = 0; i < this->channelsCount_; i++){
-			if(this->channels_[i])
-				this->channels_[i]->deinitialize();
+		if(this->isLocked_){
+			if(this->lockedChannel_){
+				this->lockedChannel_->deinitialize();
+				this->lockedChannel_ = NULL;
+			}
+			this->isLocked_ = false;
 		}
+		else{
+			for(uint32_t i = 0; i < this->channelsCount_; i++){
+				if(this->channels_[i])
+					this->channels_[i]->deinitialize();
+			}
+		}
+		this->channelsCount_ = 0;
+		this->callback_ = NULL;
 		this->isInitialized_ = false;
 	}
 }
