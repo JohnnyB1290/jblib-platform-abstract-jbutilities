@@ -180,6 +180,26 @@ void SimpleFifo::write(uint8_t byte) {
 	}
 }
 
+bool SimpleFifo::insertAtStart(uint8_t byte) {
+	uint32_t tbw = BW;
+	uint32_t tbr = BR;
+	if(tbw <= tbr || this->tmpWriteMode) {
+		return false;
+	}
+	for(uint32_t i = (tbw -1); i >= tbr; i--) {
+		buf[i + 1] = buf[i];
+		if(i == 0) {
+			break;
+		}
+	}
+	buf[tbr] = byte;
+	tbw++;
+	tbw = tbw == this->size ? 0 : tbw;
+	this->BW = tbw;
+	return true;
+}
+
+
 void SimpleFifo::write(uint8_t* bytes, uint32_t count) {
 	uint32_t tbw = this->tmpWriteMode ? BW_tmp : BW;
 	while(count-- > 0) {

@@ -56,6 +56,7 @@ public:
 	void exitTmpReadMode(bool updateCounters);
 	void write(uint8_t byte);
 	void write(uint8_t* bytes, uint32_t count);
+	bool insertAtStart(uint8_t byte);
 	void writeMemcpy(uint8_t* bytes, uint32_t count);
 	uint32_t count();
 	uint32_t tmpWriteCount();
