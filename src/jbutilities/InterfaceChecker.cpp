@@ -31,8 +31,11 @@
 #include <string.h>
 #include "jbutilities/InterfaceChecker.hpp"
 
-namespace jblib::jbutilities
+namespace jblib
 {
+namespace jbutilities
+{
+
 
 using namespace jbkernel;
 
@@ -205,14 +208,15 @@ void InterfaceChecker::afterLockDeinitialize(void)
 
 void InterfaceChecker::getParameter(const uint8_t number, void* const value)
 {
-	
+
 }
 
 
 
 void InterfaceChecker::setParameter(const uint8_t number, void* const value)
 {
-	
+
 }
 
+}
 }
