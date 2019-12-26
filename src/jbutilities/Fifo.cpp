@@ -32,7 +32,9 @@
 #include "jbkernel/jb_common.h"
 #include "jbutilities/Fifo.hpp"
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 Fifo::Fifo(uint8_t* buffer, uint16_t bufferSize)
@@ -108,7 +110,7 @@ bool Fifo::pop(uint8_t* const destination)
 
 
 bool Fifo::find(uint8_t* const destination, uint16_t index) {
-	
+
 	if((this->free_ + index) < this->bufferSize_) {
 		if ((this->rp_ + index) >= this->bufferSize_)
 			*destination = *(this->buffer_ + this->rp_ + index - this->bufferSize_);
@@ -220,4 +222,5 @@ bool Fifo::deleteMult(uint16_t size)
 	return false;
 }
 
+}
 }

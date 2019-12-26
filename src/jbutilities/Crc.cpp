@@ -30,9 +30,10 @@
 
 #include "jbutilities/Crc.hpp"
 
-namespace jblib::jbutilities
+namespace jblib
 {
-
+namespace jbutilities
+{
 
 const uint8_t Crc::crc8Table_[] = {
 	0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97,
@@ -113,4 +114,5 @@ uint16_t Crc::crc16(uint8_t* data, uint16_t size)
 	return Crc::crc16(0xFFFF, data, size);
 }
 
+}
 }

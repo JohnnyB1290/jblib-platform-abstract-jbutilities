@@ -30,9 +30,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "jbutilities/SimpleFifo.hpp"
-#include "Controller.hpp"
 
-namespace jblib::jbutilities
+namespace jblib
+{
+namespace jbutilities
 {
 
 SimpleFifo::SimpleFifo(uint32_t size) {
@@ -253,4 +254,5 @@ uint32_t SimpleFifo::W() {
 	return BW;
 }
 
+}
 }

@@ -35,9 +35,10 @@
 #define HEAD_INDEX                (this->head_ & (this->size_ - 1))
 #define TAIL_INDEX                (this->tail_ & (this->size_ - 1))
 
-namespace jblib::jbutilities
+namespace jblib
 {
-
+namespace jbutilities
+{
 
 RingBuffer::RingBuffer(void* const buffer, const uint32_t itemSize, const uint32_t size)
 {
@@ -234,4 +235,5 @@ uint32_t RingBuffer::delMult(uint32_t num)
 	return tempCount;
 }
 
+}
 }
