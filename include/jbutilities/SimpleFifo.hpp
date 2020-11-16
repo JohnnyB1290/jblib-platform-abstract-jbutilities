@@ -44,7 +44,7 @@ public:
 	uint8_t* getBufferPointer();
 	void updateBW(uint32_t count);
 	void updateBR(uint32_t count);
-	void updateBRIndex(uint32_t BR);
+	void updateBRIndex(uint32_t br);
 	bool isEmpty();
 	bool isFull();
 	uint8_t nextByte();
@@ -65,14 +65,14 @@ public:
 	uint32_t W();
 
 private:
-	uint8_t* buf;
-	uint32_t BW;
-	uint32_t BR;
-	uint32_t BW_tmp;
-	uint32_t BR_tmp;
-	uint32_t size;
-	bool tmpWriteMode;
-	bool tmpReadMode;
+	uint8_t* buf_;
+	uint32_t bw_;
+	uint32_t br_;
+	uint32_t bwTmp_;
+	uint32_t brTmp_;
+	uint32_t size_;
+	bool tmpWriteMode_;
+	bool tmpReadMode_;
 
 };
 

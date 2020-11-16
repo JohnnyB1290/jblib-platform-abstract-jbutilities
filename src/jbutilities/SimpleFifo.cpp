@@ -37,59 +37,59 @@ namespace jbutilities
 {
 
 SimpleFifo::SimpleFifo(uint32_t size) {
-	this->BW_tmp = 0;
-	this->BR_tmp = 0;
-	this->buf = (uint8_t*)malloc(size);
-	this->size = size;
+	this->bwTmp_ = 0;
+	this->brTmp_ = 0;
+	this->buf_ = (uint8_t*)malloc(size);
+	this->size_ = size;
 	this->reset();
 }
 
 SimpleFifo::SimpleFifo(uint8_t* externalBufPointer, uint32_t size) {
-	this->BW_tmp = 0;
-	this->BR_tmp = 0;
+	this->bwTmp_ = 0;
+	this->brTmp_ = 0;
 	if(externalBufPointer) {
-		this->buf = externalBufPointer;
+		this->buf_ = externalBufPointer;
 	} else {
-		this->buf = (uint8_t*)malloc(size);
+		this->buf_ = (uint8_t*)malloc(size);
 	}
-	this->size = size;
+	this->size_ = size;
 	this->reset();
 }
 
 void SimpleFifo::reset() {
-	this->BW = this->BR = 0;
-	this->tmpWriteMode = false;
-	this->tmpReadMode = false;
+	this->bw_ = this->br_ = 0;
+	this->tmpWriteMode_ = false;
+	this->tmpReadMode_ = false;
 }
 
 uint8_t* SimpleFifo::getWritePointer() {
-	return &buf[BW];
+	return &this->buf_[this->bw_];
 }
 
 uint8_t* SimpleFifo::getReadPointer() {
-	return &buf[BR];
+	return &this->buf_[this->br_];
 }
 
 uint8_t* SimpleFifo::getBufferPointer() {
-	return buf;
+	return this->buf_;
 }
 
 void SimpleFifo::updateBW(uint32_t count) {
-	this->BW += count;
-	this->BW = this->BW >= this->size ? (this->BW % this->size) : this->BW;
+	this->bw_ += count;
+	this->bw_ = this->bw_ >= this->size_ ? (this->bw_ % this->size_) : this->bw_;
 }
 
 void SimpleFifo::updateBR(uint32_t count) {
-	this->BR += count;
-	this->BR = this->BR >= this->size ? (this->BR % this->size) : this->BR;
+	this->br_ += count;
+	this->br_ = this->br_ >= this->size_ ? (this->br_ % this->size_) : this->br_;
 }
 
 void SimpleFifo::updateBRIndex(uint32_t BR) {
-	this->BR = BR % this->size;
+	this->br_ = BR % this->size_;
 }
 
 bool SimpleFifo::isEmpty() {
-	return BW == BR;
+	return this->bw_ == this->br_;
 }
 
 bool SimpleFifo::isFull() {
@@ -100,13 +100,13 @@ uint8_t SimpleFifo::nextByte() {
 	if(isEmpty()) {
 		return 0;
 	}
-	uint8_t byte = buf[this->tmpReadMode ? BR_tmp : BR];
-	if(this->tmpReadMode) {
-		this->BR_tmp++;
-		this->BR_tmp = this->BR_tmp >= this->size ? (this->BR_tmp % this->size) : this->BR_tmp;
+	uint8_t byte = this->buf_[this->tmpReadMode_ ? brTmp_ : this->br_];
+	if(this->tmpReadMode_) {
+		this->brTmp_++;
+		this->brTmp_ = this->brTmp_ >= this->size_ ? (this->brTmp_ % this->size_) : this->brTmp_;
 	} else {
-		this->BR++;
-		this->BR = this->BR >= this->size ? (this->BR % this->size) : this->BR;
+		this->br_++;
+		this->br_ = this->br_ >= this->size_ ? (this->br_ % this->size_) : this->br_;
 	}
 	return byte;
 }
@@ -126,132 +126,132 @@ uint32_t SimpleFifo::getMemcpy(uint8_t* dest, uint32_t count) {
 		count = this->count();
 	}
 
-	uint32_t tbr = this->tmpReadMode ? BR_tmp : BR;
+	uint32_t tbr = this->tmpReadMode_ ? brTmp_ : this->br_;
 
-    const uint32_t toRead = (((count) < (size - tbr)) ? (count) : (size - tbr));
-    memcpy(dest, buf + tbr, toRead);
-    memcpy(dest + toRead, buf, count - toRead);
+    const uint32_t toRead = (((count) < (this->size_ - tbr)) ? (count) : (this->size_ - tbr));
+    memcpy(dest, this->buf_ + tbr, toRead);
+    memcpy(dest + toRead, this->buf_, count - toRead);
 
-    if(this->tmpReadMode) {
-    	this->BR_tmp += count;
-    	this->BR_tmp = this->BR_tmp >= this->size ? (this->BR_tmp % this->size) : this->BR_tmp;
+    if(this->tmpReadMode_) {
+    	this->brTmp_ += count;
+    	this->brTmp_ = this->brTmp_ >= this->size_ ? (this->brTmp_ % this->size_) : this->brTmp_;
     } else {
-    	this->BR += count;
-    	this->BR = this->BR >= this->size ? (this->BR % this->size) : this->BR;
+    	this->br_ += count;
+    	this->br_ = this->br_ >= this->size_ ? (this->br_ % this->size_) : this->br_;
     }
 
     return count;
 }
 
 void SimpleFifo::gotoTmpWriteMode() {
-	if(this->tmpWriteMode) {
+	if(this->tmpWriteMode_) {
 		return;
 	}
-	this->BW_tmp = this->BW;
-	this->tmpWriteMode = true;
+	this->bwTmp_ = this->bw_;
+	this->tmpWriteMode_ = true;
 }
 
 void SimpleFifo::exitTmpWriteMode(bool updateCounters) {
-	this->tmpWriteMode = false;
+	this->tmpWriteMode_ = false;
 	if(updateCounters) {
-		this->BW = this->BW_tmp;
+		this->bw_ = this->bwTmp_;
 	}
 }
 
 void SimpleFifo::gotoTmpReadMode() {
-	this->BR_tmp = this->BR;
-	this->tmpReadMode = true;
+	this->brTmp_ = this->br_;
+	this->tmpReadMode_ = true;
 }
 
 void SimpleFifo::exitTmpReadMode(bool updateCounters) {
-	this->tmpReadMode = false;
+	this->tmpReadMode_ = false;
 	if(updateCounters) {
-		this->BR = this->BR_tmp;
+		this->br_ = this->brTmp_;
 	}
 }
 
 void SimpleFifo::write(uint8_t byte) {
-	uint32_t tbw = this->tmpWriteMode ? BW_tmp : BW;
-	buf[tbw++] = byte;
-	tbw = tbw == this->size ? 0 : tbw;
-	if(this->tmpWriteMode) {
-		this->BW_tmp = tbw;
+	uint32_t tbw = this->tmpWriteMode_ ? bwTmp_ : bw_;
+	this->buf_[tbw++] = byte;
+	tbw = tbw == this->size_ ? 0 : tbw;
+	if(this->tmpWriteMode_) {
+		this->bwTmp_ = tbw;
 	} else {
-		this->BW = tbw;
+		this->bw_ = tbw;
 	}
 }
 
 bool SimpleFifo::insertAtStart(uint8_t byte) {
-	uint32_t tbw = BW;
-	uint32_t tbr = BR;
-	if(tbw <= tbr || this->tmpWriteMode) {
+	uint32_t tbw = this->bw_;
+	uint32_t tbr = this->br_;
+	if(tbw <= tbr || this->tmpWriteMode_) {
 		return false;
 	}
 	for(uint32_t i = (tbw -1); i >= tbr; i--) {
-		buf[i + 1] = buf[i];
+		this->buf_[i + 1] = this->buf_[i];
 		if(i == 0) {
 			break;
 		}
 	}
-	buf[tbr] = byte;
+	this->buf_[tbr] = byte;
 	tbw++;
-	tbw = tbw == this->size ? 0 : tbw;
-	this->BW = tbw;
+	tbw = tbw == this->size_ ? 0 : tbw;
+	this->bw_ = tbw;
 	return true;
 }
 
 
 void SimpleFifo::write(uint8_t* bytes, uint32_t count) {
-	uint32_t tbw = this->tmpWriteMode ? BW_tmp : BW;
+	uint32_t tbw = this->tmpWriteMode_ ? bwTmp_ : bw_;
 	while(count-- > 0) {
-		buf[tbw++] = *bytes++;
-		tbw = tbw == this->size ? 0 : tbw;
+		this->buf_[tbw++] = *bytes++;
+		tbw = tbw == this->size_ ? 0 : tbw;
 	}
-	if(this->tmpWriteMode) {
-		this->BW_tmp = tbw;
+	if(this->tmpWriteMode_) {
+		this->bwTmp_ = tbw;
 	} else {
-		this->BW = tbw;
+		this->bw_ = tbw;
 	}
 }
 
 void SimpleFifo::writeMemcpy(uint8_t* bytes, uint32_t count) {
-	uint32_t tbw = this->tmpWriteMode ? BW_tmp : BW;
+	uint32_t tbw = this->tmpWriteMode_ ? bwTmp_ : bw_;
 
-    const uint32_t toWrite = (((count) < (size - tbw)) ? (count) : (size - tbw));
-    memcpy(buf + tbw, bytes, toWrite);
-    memcpy(buf, bytes + toWrite, count - toWrite);
+    const uint32_t toWrite = (((count) < (this->size_ - tbw)) ? (count) : (this->size_ - tbw));
+    memcpy(this->buf_ + tbw, bytes, toWrite);
+    memcpy(this->buf_, bytes + toWrite, count - toWrite);
 
-    if(this->tmpWriteMode) {
-    	this->BW_tmp += count;
-    	this->BW_tmp = this->BW_tmp >= this->size ? (this->BW_tmp % this->size) : this->BW_tmp;
+    if(this->tmpWriteMode_) {
+    	this->bwTmp_ += count;
+    	this->bwTmp_ = this->bwTmp_ >= this->size_ ? (this->bwTmp_ % this->size_) : this->bwTmp_;
     } else {
-    	this->BW += count;
-    	this->BW = this->BW >= this->size ? (this->BW % this->size) : this->BW;
+    	this->bw_ += count;
+    	this->bw_ = this->bw_ >= this->size_ ? (this->bw_ % this->size_) : this->bw_;
     }
 }
 
 uint32_t SimpleFifo::count() {
-	return BW >= BR ? (BW - BR) : (size - BR + BW);
+	return bw_ >= this->br_ ? (bw_ - this->br_) : (this->size_ - this->br_ + bw_);
 }
 
 uint32_t SimpleFifo::tmpWriteCount() {
-	if(this->tmpWriteMode) {
-		return BW_tmp >= BR ? (BW_tmp - BR) : (size - BR + BW_tmp);
+	if(this->tmpWriteMode_) {
+		return bwTmp_ >= this->br_ ? (bwTmp_ - this->br_) : (this->size_ - this->br_ + bwTmp_);
 	} else {
-		return BW >= BR ? (BW - BR) : (size - BR + BW);
+		return bw_ >= this->br_ ? (bw_ - this->br_) : (this->size_ - this->br_ + bw_);
 	}
 }
 
 uint32_t SimpleFifo::capacity() {
-	return this->size;
+	return this->size_;
 }
 
 uint32_t SimpleFifo::R() {
-	return BR;
+	return this->br_;
 }
 
 uint32_t SimpleFifo::W() {
-	return BW;
+	return this->bw_;
 }
 
 }
