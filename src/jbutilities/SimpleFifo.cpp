@@ -49,11 +49,20 @@ SimpleFifo::SimpleFifo(uint8_t* externalBufPointer, uint32_t size) {
 	this->brTmp_ = 0;
 	if(externalBufPointer) {
 		this->buf_ = externalBufPointer;
+		this->extMemory_ = true;
 	} else {
 		this->buf_ = (uint8_t*)malloc(size);
 	}
 	this->size_ = size;
 	this->reset();
+}
+
+
+SimpleFifo::~SimpleFifo() {
+	if(this->extMemory_) {
+		return;
+	}
+	free(this->buf_);
 }
 
 void SimpleFifo::reset() {

@@ -38,7 +38,10 @@ class SimpleFifo
 public:
 	SimpleFifo(uint32_t size);
 	SimpleFifo(uint8_t* externalBufPointer, uint32_t size);
-	void reset();
+
+    virtual ~SimpleFifo();
+
+    void reset();
 	uint8_t* getWritePointer();
 	uint8_t* getReadPointer();
 	uint8_t* getBufferPointer();
@@ -71,6 +74,7 @@ private:
 	uint32_t bwTmp_;
 	uint32_t brTmp_;
 	uint32_t size_;
+	bool extMemory_ = false;
 	bool tmpWriteMode_;
 	bool tmpReadMode_;
 
